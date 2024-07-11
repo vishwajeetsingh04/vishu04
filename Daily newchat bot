@@ -1,0 +1,51 @@
+import os
+import requests //you neend to first run on any terminal 'pip install requests' then paste the whole code in python any code runing software and make sure that you generate the api key then run it .
+
+def get_news(api_key, keyword, language='en', country='us'):
+    base_url = 'https://newsapi.org/v2/top-headlines'
+    params = {
+        'apiKey': api_key,
+        'q': keyword,
+        'language': language,
+        'country': country
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        news_data = response.json()
+
+        if news_data['status'] == 'ok':
+            articles = news_data['articles']
+            return articles
+        else:
+          
+            return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+def chatbot():
+    print("Welcome to the Daily News Chatbot!")
+    api_key ='go to the newapi and create a new api key by login in that account'
+   
+    while True:
+        user_input = input("Enter a keyword to search for news (type 'exit' to end): ")
+
+        if user_input.lower() == 'exit':
+            print("Goodbye!")
+            break
+
+        news_articles = get_news(api_key, user_input)
+
+        if news_articles:
+            for index, article in enumerate(news_articles, 1):
+                print(f"\nArticle {index}:")
+                print(f"Title: {article['title']}")
+                print(f"Source: {article['source']['name']}")
+                print(f"Description: {article['description']}")
+                print(f"URL: {article['url']}")
+        else:
+            print("No news found for the given keyword. Please try another keyword.")
+
+if __name__ == "__main__":
+    chatbot()
